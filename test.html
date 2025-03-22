@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instagram App Link Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            // Create a hidden iframe to attempt opening the app
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'instagram://user?username=justinbieber';
+            document.body.appendChild(iframe);
+            
+            // Clean up the iframe after a short delay
+            setTimeout(function() {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <h1>Instagram App Link Test</h1>
+    <p>This page is attempting to open the Instagram app for Justin Bieber's profile.</p>
+    <p>If you remain on this page and don't see an error, it means either:</p>
+    <ul>
+        <li>The app opened successfully (if installed)</li>
+        <li>The app failed to open but no error was shown (if not installed)</li>
+    </ul>
+</body>
+</html>

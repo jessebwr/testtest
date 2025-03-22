@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instagram App Link Test (Error Version)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            // Directly change window.location - this will show an error if the app isn't installed
+            window.location = 'instagram://user?username=justinbieber';
+        });
+    </script>
+</head>
+<body>
+    <h1>Instagram App Link Test (Error Version)</h1>
+    <p>This page is attempting to open the Instagram app using the problematic approach.</p>
+    <p>If the app is not installed, you will likely see an error message like "Safari cannot open the page because the address is invalid".</p>
+</body>
+</html>
