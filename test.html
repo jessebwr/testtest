@@ -1,37 +1,296 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Instagram App Link Test</title>
+    <title>Instagram App Deep Link Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-itunes-app" content="app-id=389801252, app-argument=instagram://user?username=justinbieber">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .section h2 {
+            font-size: 18px;
+            margin-top: 0;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instagram App Deep Link Test</h1>
+    <p>This page tests various methods to open the Instagram app. Each button uses a different technique.</p>
+    <p>Target: Justin Bieber's profile (instagram://user?username=justinbieber)</p>
+    
+    <div class="section">
+        <h2>Direct Window Location Methods</h2>
+        
+        <button id="windowLocationBtn">
+            window.location = "instagram://user?username=justinbieber"
+        </button>
+        
+        <button id="windowLocationHrefBtn">
+            window.location.href = "instagram://user?username=justinbieber"
+        </button>
+        
+        <button id="windowLocationAssignBtn">
+            window.location.assign("instagram://user?username=justinbieber")
+        </button>
+        
+        <button id="windowLocationReplaceBtn">
+            window.location.replace("instagram://user?username=justinbieber")
+        </button>
+        
+        <button id="documentLocationBtn">
+            document.location = "instagram://user?username=justinbieber"
+        </button>
+        
+        <button id="documentLocationHrefBtn">
+            document.location.href = "instagram://user?username=justinbieber"
+        </button>
+    </div>
+    
+    <div class="section">
+        <h2>Iframe Methods</h2>
+        
+        <button id="iframeWindowLocationBtn">
+            iframe + window.location
+        </button>
+        
+        <button id="iframeWindowLocationHrefBtn">
+            iframe + window.location.href
+        </button>
+        
+        <button id="iframeDocumentLocationBtn">
+            iframe + document.location
+        </button>
+        
+        <button id="iframeDirectBtn">
+            iframe direct src
+        </button>
+    </div>
+    
+    <div class="section">
+        <h2>Link Methods</h2>
+        
+        <button id="createAndClickLinkBtn">
+            Create and click link
+        </button>
+        
+        <a href="instagram://user?username=justinbieber" id="directLink">
+            <button>Direct href link</button>
+        </a>
+    </div>
+    
+    <div class="section">
+        <h2>Alternative Methods</h2>
+        
+        <button id="timeoutRedirectBtn">
+            Delayed redirect (500ms)
+        </button>
+        
+        <button id="historyPushStateBtn">
+            History pushState
+        </button>
+        
+        <button id="intentUrlBtn">
+            Intent URL (Android)
+        </button>
+    </div>
+    
+    <div id="status">Status: Ready to test</div>
+    
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            // Use a focused iframe approach which works better on iOS
+        // Helper to update status
+        function updateStatus(method) {
+            document.getElementById('status').innerHTML = 'Status: Attempted to open Instagram using ' + method;
+        }
+        
+        // Direct window location methods
+        document.getElementById('windowLocationBtn').addEventListener('click', function() {
+            updateStatus('window.location');
+            window.location = "instagram://user?username=justinbieber";
+        });
+        
+        document.getElementById('windowLocationHrefBtn').addEventListener('click', function() {
+            updateStatus('window.location.href');
+            window.location.href = "instagram://user?username=justinbieber";
+        });
+        
+        document.getElementById('windowLocationAssignBtn').addEventListener('click', function() {
+            updateStatus('window.location.assign()');
+            window.location.assign("instagram://user?username=justinbieber");
+        });
+        
+        document.getElementById('windowLocationReplaceBtn').addEventListener('click', function() {
+            updateStatus('window.location.replace()');
+            window.location.replace("instagram://user?username=justinbieber");
+        });
+        
+        document.getElementById('documentLocationBtn').addEventListener('click', function() {
+            updateStatus('document.location');
+            document.location = "instagram://user?username=justinbieber";
+        });
+        
+        document.getElementById('documentLocationHrefBtn').addEventListener('click', function() {
+            updateStatus('document.location.href');
+            document.location.href = "instagram://user?username=justinbieber";
+        });
+        
+        // Iframe methods
+        document.getElementById('iframeWindowLocationBtn').addEventListener('click', function() {
+            updateStatus('iframe + window.location');
             var iframe = document.createElement('iframe');
             iframe.style.width = "1px";
             iframe.style.height = "1px";
-            iframe.style.opacity = "0.01";
-            iframe.style.border = "none";
+            iframe.style.opacity = "0";
             iframe.style.position = "absolute";
             iframe.style.top = "-100px";
-            iframe.src = 'instagram://user?username=justinbieber';
-            
-            // Handle focus and then remove the iframe
-            iframe.onload = function() {
-                setTimeout(function() {
-                    if (document.body.contains(iframe)) {
-                        document.body.removeChild(iframe);
-                    }
-                }, 500);
-            };
-            
-            // Add iframe to DOM
             document.body.appendChild(iframe);
+            
+            try {
+                iframe.contentWindow.location = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Error with iframe method:", e);
+            }
+            
+            setTimeout(function() {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 500);
+        });
+        
+        document.getElementById('iframeWindowLocationHrefBtn').addEventListener('click', function() {
+            updateStatus('iframe + window.location.href');
+            var iframe = document.createElement('iframe');
+            iframe.style.width = "1px";
+            iframe.style.height = "1px";
+            iframe.style.opacity = "0";
+            iframe.style.position = "absolute";
+            iframe.style.top = "-100px";
+            document.body.appendChild(iframe);
+            
+            try {
+                iframe.contentWindow.location.href = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Error with iframe method:", e);
+            }
+            
+            setTimeout(function() {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 500);
+        });
+        
+        document.getElementById('iframeDocumentLocationBtn').addEventListener('click', function() {
+            updateStatus('iframe + document.location');
+            var iframe = document.createElement('iframe');
+            iframe.style.width = "1px";
+            iframe.style.height = "1px";
+            iframe.style.opacity = "0";
+            iframe.style.position = "absolute";
+            iframe.style.top = "-100px";
+            document.body.appendChild(iframe);
+            
+            try {
+                iframe.contentDocument.location = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Error with iframe method:", e);
+            }
+            
+            setTimeout(function() {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 500);
+        });
+        
+        document.getElementById('iframeDirectBtn').addEventListener('click', function() {
+            updateStatus('iframe direct src');
+            var iframe = document.createElement('iframe');
+            iframe.style.width = "1px";
+            iframe.style.height = "1px";
+            iframe.style.opacity = "0";
+            iframe.style.position = "absolute";
+            iframe.style.top = "-100px";
+            iframe.src = "instagram://user?username=justinbieber";
+            document.body.appendChild(iframe);
+            
+            setTimeout(function() {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 500);
+        });
+        
+        // Link methods
+        document.getElementById('createAndClickLinkBtn').addEventListener('click', function() {
+            updateStatus('create and click link');
+            var a = document.createElement('a');
+            a.href = "instagram://user?username=justinbieber";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(function() {
+                document.body.removeChild(a);
+            }, 500);
+        });
+        
+        // Alternative methods
+        document.getElementById('timeoutRedirectBtn').addEventListener('click', function() {
+            updateStatus('delayed redirect');
+            setTimeout(function() {
+                window.location.href = "instagram://user?username=justinbieber";
+            }, 500);
+        });
+        
+        document.getElementById('historyPushStateBtn').addEventListener('click', function() {
+            updateStatus('history pushState');
+            try {
+                window.history.pushState(null, "", "instagram://user?username=justinbieber");
+            } catch (e) {
+                console.error("Error with history method:", e);
+                // If pushState fails with the protocol, try a fallback
+                window.location.href = "instagram://user?username=justinbieber";
+            }
+        });
+        
+        document.getElementById('intentUrlBtn').addEventListener('click', function() {
+            updateStatus('intent URL (Android)');
+            // Note: This is Android-specific and likely won't work on iOS
+            window.location.href = "intent://instagram.com/justinbieber#Intent;package=com.instagram.android;scheme=https;end";
         });
     </script>
-</head>
-<body>
-    <h1>Instagram App Link Test</h1>
-    <p>This page is attempting to open the Instagram app for Justin Bieber's profile.</p>
-    <p>If you remain on this page, the app may not be installed or couldn't be opened.</p>
 </body>
 </html>
