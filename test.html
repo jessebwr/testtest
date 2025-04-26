@@ -126,6 +126,38 @@
         </button>
     </div>
     
+    <div class="section">
+        <h2>Advanced Workarounds</h2>
+        
+        <button id="serviceWorkerBtn">
+            Service Worker Registration
+        </button>
+        
+        <button id="notificationBtn">
+            Web Push Notification
+        </button>
+        
+        <button id="metaRefreshBtn">
+            Meta Refresh Approach
+        </button>
+        
+        <button id="blobUrlBtn">
+            Blob URL Redirection
+        </button>
+        
+        <button id="dataUriBtn">
+            Data URI Scheme
+        </button>
+        
+        <button id="universalLinkBtn">
+            Universal Link Instead of Custom URL
+        </button>
+        
+        <button id="copyToClipboardBtn">
+            Copy to Clipboard (Fallback)
+        </button>
+    </div>
+    
     <div id="status">Status: Ready to test</div>
     
     <script>
@@ -290,6 +322,150 @@
             updateStatus('intent URL (Android)');
             // Note: This is Android-specific and likely won't work on iOS
             window.location.href = "intent://instagram.com/justinbieber#Intent;package=com.instagram.android;scheme=https;end";
+        });
+        
+        // Advanced Workarounds
+        
+        // Service Worker Registration
+        document.getElementById('serviceWorkerBtn').addEventListener('click', function() {
+            updateStatus('Service Worker Registration');
+            if ('serviceWorker' in navigator) {
+                // Create a dynamic service worker script as a blob
+                const swScript = `
+                    self.addEventListener('install', function(event) {
+                        self.skipWaiting();
+                    });
+                    
+                    self.addEventListener('activate', function(event) {
+                        event.waitUntil(self.clients.claim());
+                    });
+                    
+                    self.addEventListener('fetch', function(event) {
+                        if (event.request.url.includes('sw-trigger')) {
+                            event.respondWith(
+                                new Response('', {
+                                    headers: { 'Location': 'instagram://user?username=justinbieber' },
+                                    status: 302
+                                })
+                            );
+                        }
+                    });
+                `;
+                
+                const blob = new Blob([swScript], {type: 'application/javascript'});
+                const blobURL = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(blobURL)
+                .then(function(registration) {
+                    console.log('Service Worker registered');
+                    // Try to trigger the service worker
+                    fetch('sw-trigger.html')
+                    .catch(function(error) {
+                        // Expected to fail, but hopefully the SW will intercept
+                        console.log('Trigger fetch attempted');
+                    });
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            } else {
+                console.log('Service Workers not supported');
+            }
+        });
+        
+        // Web Push Notification
+        document.getElementById('notificationBtn').addEventListener('click', function() {
+            updateStatus('Web Push Notification');
+            if ('Notification' in window) {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        // Create and show a notification
+                        const notification = new Notification('Open Instagram', {
+                            body: 'Click to open Instagram profile',
+                            icon: 'https://www.instagram.com/static/images/ico/apple-touch-icon-76x76-precomposed.png/666282be8229.png'
+                        });
+                        
+                        notification.onclick = function() {
+                            window.location.href = "instagram://user?username=justinbieber";
+                        };
+                    }
+                });
+            } else {
+                console.log('Notifications not supported');
+            }
+        });
+        
+        // Meta Refresh Approach
+        document.getElementById('metaRefreshBtn').addEventListener('click', function() {
+            updateStatus('Meta Refresh Approach');
+            // Create a temporary meta tag
+            const meta = document.createElement('meta');
+            meta.httpEquiv = 'refresh';
+            meta.content = '0;url=instagram://user?username=justinbieber';
+            document.head.appendChild(meta);
+            
+            // Remove it after a short delay
+            setTimeout(function() {
+                document.head.removeChild(meta);
+            }, 1000);
+        });
+        
+        // Blob URL Redirection
+        document.getElementById('blobUrlBtn').addEventListener('click', function() {
+            updateStatus('Blob URL Redirection');
+            const htmlContent = `
+                <html>
+                    <head>
+                        <meta http-equiv="refresh" content="0;url=instagram://user?username=justinbieber">
+                    </head>
+                    <body>
+                        Redirecting to Instagram...
+                    </body>
+                </html>
+            `;
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const blobUrl = URL.createObjectURL(blob);
+            window.location = blobUrl;
+        });
+        
+        // Data URI Scheme
+        document.getElementById('dataUriBtn').addEventListener('click', function() {
+            updateStatus('Data URI Scheme');
+            const encodedRedirect = encodeURIComponent('<html><head><meta http-equiv="refresh" content="0;url=instagram://user?username=justinbieber"></head></html>');
+            window.location = "data:text/html;charset=utf-8," + encodedRedirect;
+        });
+        
+        // Universal Link Instead of Custom URL
+        document.getElementById('universalLinkBtn').addEventListener('click', function() {
+            updateStatus('Universal Link');
+            // Try Instagram's web URL instead of custom URL scheme
+            window.location = "https://www.instagram.com/justinbieber/";
+        });
+        
+        // Copy to Clipboard
+        document.getElementById('copyToClipboardBtn').addEventListener('click', function() {
+            updateStatus('Copy to Clipboard');
+            const deepLink = "instagram://user?username=justinbieber";
+            // Use a temporary textarea for compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = deepLink;
+            textarea.style.position = 'fixed';  // Avoid scrolling to bottom
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                // Execute copy command
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert("Deep link copied to clipboard! Open Safari and paste in the address bar to open Instagram.");
+                } else {
+                    alert("Failed to copy deep link.");
+                }
+            } catch (err) {
+                alert("Error copying to clipboard: " + err);
+            }
+            
+            document.body.removeChild(textarea);
         });
     </script>
 </body>
