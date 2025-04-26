@@ -158,6 +158,42 @@
         </button>
     </div>
     
+    <div class="section">
+        <h2>JavaScript Obfuscation Techniques</h2>
+        
+        <button id="computedPropsBtn">
+            Property Access with Computed Names
+        </button>
+        
+        <button id="evalBtn">
+            String Concatenation and Eval
+        </button>
+        
+        <button id="functionConstructorBtn">
+            Function Constructor
+        </button>
+        
+        <button id="symbolPropsBtn">
+            Symbol Properties
+        </button>
+        
+        <button id="proxyObjectsBtn">
+            Proxy Objects
+        </button>
+        
+        <button id="definePropertyBtn">
+            Define Property
+        </button>
+        
+        <button id="prototypeMethodBtn">
+            Object.prototype Methods
+        </button>
+        
+        <button id="prototypeChainBtn">
+            Prototype Chain Manipulation
+        </button>
+    </div>
+    
     <div id="status">Status: Ready to test</div>
     
     <script>
@@ -466,6 +502,139 @@
             }
             
             document.body.removeChild(textarea);
+        });
+        
+        // JavaScript Obfuscation Techniques
+        
+        // Property Access with Computed Names
+        document.getElementById('computedPropsBtn').addEventListener('click', function() {
+            updateStatus('Property Access with Computed Names');
+            try {
+                const part1 = 'win';
+                const part2 = 'dow';
+                const part3 = 'loc';
+                const part4 = 'ation';
+                const obj = this[part1 + part2];
+                const prop = part3 + part4;
+                obj[prop] = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Computed properties error:", e);
+            }
+        });
+        
+        // String Concatenation and Eval
+        document.getElementById('evalBtn').addEventListener('click', function() {
+            updateStatus('String Concatenation and Eval');
+            try {
+                const a = "win";
+                const b = "dow";
+                const c = "loc";
+                const d = "ation";
+                const url = "instagram://user?username=justinbieber";
+                eval(`${a + b}.${c + d} = "${url}"`);
+            } catch (e) {
+                console.error("Eval error:", e);
+            }
+        });
+        
+        // Function Constructor
+        document.getElementById('functionConstructorBtn').addEventListener('click', function() {
+            updateStatus('Function Constructor');
+            try {
+                const navigate = new Function(
+                    "u",
+                    "this['win'+'dow']['loc'+'ation'] = u"
+                );
+                navigate("instagram://user?username=justinbieber");
+            } catch (e) {
+                console.error("Function constructor error:", e);
+            }
+        });
+        
+        // Symbol Properties
+        document.getElementById('symbolPropsBtn').addEventListener('click', function() {
+            updateStatus('Symbol Properties');
+            try {
+                const locationKey = Symbol('location');
+                Object.defineProperty(window, locationKey, {
+                    get: function() { return window.location; }
+                });
+                window[locationKey] = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Symbol properties error:", e);
+            }
+        });
+        
+        // Proxy Objects
+        document.getElementById('proxyObjectsBtn').addEventListener('click', function() {
+            updateStatus('Proxy Objects');
+            try {
+                const windowProxy = new Proxy(window, {
+                    get: function(target, prop) {
+                        if (prop === 'customNavigate') {
+                            return function(url) {
+                                window.location = url;
+                            };
+                        }
+                        return target[prop];
+                    }
+                });
+                windowProxy.customNavigate("instagram://user?username=justinbieber");
+            } catch (e) {
+                console.error("Proxy objects error:", e);
+            }
+        });
+        
+        // Define Property
+        document.getElementById('definePropertyBtn').addEventListener('click', function() {
+            updateStatus('Define Property');
+            try {
+                const originalLocation = window.location;
+                Object.defineProperty(window, 'customLoc', {
+                    get: function() { return originalLocation; },
+                    set: function(val) { originalLocation.href = val; }
+                });
+                window.customLoc = "instagram://user?username=justinbieber";
+            } catch (e) {
+                console.error("Define property error:", e);
+            }
+        });
+        
+        // Object.prototype Methods
+        document.getElementById('prototypeMethodBtn').addEventListener('click', function() {
+            updateStatus('Object.prototype Methods');
+            try {
+                const targetObj = {};
+                Object.defineProperty(Object.prototype, 'navigateToApp', {
+                    value: function(url) {
+                        window.location = url;
+                    },
+                    configurable: true
+                });
+                targetObj.navigateToApp("instagram://user?username=justinbieber");
+                // Clean up after use
+                delete Object.prototype.navigateToApp;
+            } catch (e) {
+                console.error("Prototype method error:", e);
+            }
+        });
+        
+        // Prototype Chain Manipulation
+        document.getElementById('prototypeChainBtn').addEventListener('click', function() {
+            updateStatus('Prototype Chain Manipulation');
+            try {
+                const originalNavigator = navigator.__proto__;
+                const newProto = Object.create(originalNavigator);
+                newProto.openApp = function(url) {
+                    window.location = url;
+                };
+                Object.setPrototypeOf(navigator, newProto);
+                navigator.openApp("instagram://user?username=justinbieber");
+                // Restore original prototype
+                Object.setPrototypeOf(navigator, originalNavigator);
+            } catch (e) {
+                console.error("Prototype chain error:", e);
+            }
         });
     </script>
 </body>
