@@ -1,12 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="apple-itunes-app" content="app-id=389801252">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automatic Deep Linking</title>
+    <title>Instagram Intent URL Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        button {
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+        }
+        
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
-    <div>Hello</div>
+    <h1>Instagram Intent URL Test</h1>
+    
+    <p>Click the button below to test opening Instagram using an intent URL</p>
+    
+    <button id="openInstagramBtn">Open Instagram Reel</button>
+    
+    <div id="status">Status: Ready to test</div>
+    
+    <script>
+        document.getElementById('openInstagramBtn').addEventListener('click', function() {
+            document.getElementById('status').textContent = 'Status: Attempting to open Instagram...';
+            
+            // Set window.location.href to the provided intent URL
+            window.location.href = "intent://instagram.com/reels/videos/DBJOdsau9Er?ig_mid=D8D7F85A-D2DD-4B67-9F24-18E0D9E72956&utm_source=igweb#Intent;package=com.instagram.lite;action=android.intent.action.VIEW;scheme=https;S.browser_fallback_url=https%3A%2F%2Fapps.apple.com%2Fapp%2Finstagram%2Fid389801252%3Fct%3Digweb.instagramlitecarbon%26mt%3D8%26pt%3D428156%26vt%3Dlo;end";
+            
+            // The page will likely navigate away, but if it doesn't, update status after a delay
+            setTimeout(function() {
+                document.getElementById('status').textContent = 'Status: Navigation may have failed. Check if Instagram opened.';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
