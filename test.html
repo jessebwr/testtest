@@ -207,7 +207,9 @@
         // Direct window location methods
         document.getElementById('windowLocationBtn').addEventListener('click', function() {
             updateStatus('window.location');
-            window.location = `https://apps.apple.com/app/instagram/id389801252?app-argument=${encodeURIComponent('instagram://user?username=justinbieber')}`;
+            const res = `https://apps.apple.com/app/instagram/id389801252?app-argument=${encodeURIComponent('instagram://user?username=justinbieber')}`;
+            console.log('[JWR] going to...', res);
+            window.location = res;
         });
         
         document.getElementById('windowLocationHrefBtn').addEventListener('click', function() {
